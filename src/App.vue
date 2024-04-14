@@ -1,16 +1,19 @@
 <template>
-    <navbar
-      :pages = "pages"
-      :text = "pages[activePage]"
-      :theme = "theme"
-      :change="changeTheme"
-      :modo= "getTema()"
-      :func ="(index)=>activePage = index">
-    </navbar>
-    <pageviewer 
-      :title="pages[activePage].link.text"
-      :modo = "getTema()">
-    </pageviewer>
+<navbar
+  :v-if="pages.length > 0"
+  :pages="pages"
+  :text="pages[activePage]"
+  :theme="theme"
+  :change="changeTheme"
+  :modo="getTema()"
+  :func="(index) => activePage = index">
+</navbar>
+
+<page-viewer 
+    :v-if="pages.length > 0"
+    :title="pages[activePage].pageTitle"
+    :modo = "getTema()">
+</page-viewer>
 </template>
 
 <script>
@@ -22,27 +25,14 @@ export default{
   components:{
     Navbar, PageViewer
   },
+  created(){
+    this.getPages();
+  },
   data(){
       return{
         theme:'light',
         activePage: 0,
-        pages: [
-                  {
-                      link: {url: 'index.html' , text:'Home'},
-                      pageTitle:'Hello vue, you are in the Index',
-                      pageContent:'Welcome to my training with vue'
-                  },
-                  {
-                      link: {url: 'about.html' , text:'About'},
-                      pageTitle:'Hello vue, you are in the About',
-                      pageContent:'Welcome to my training with vue'
-                  },
-                  {
-                      link: {url: 'contact.html' , text:'Contact'},
-                      pageTitle:'Hello vue, you are in the Contact',
-                      pageContent:'Welcome to my training with vue'
-                  }
-              ]
+        pages: []
       }
     },
   methods:
@@ -54,6 +44,12 @@ export default{
     getTema() 
     {
       return this.theme === 'light' ? 'Modo Branco' : 'Modo Escuro';
+    },
+    async getPages(){
+      let res = await fetch('pages.json');
+      let data = await res.json()
+
+      this.pages = data;
     }
   }
 }
