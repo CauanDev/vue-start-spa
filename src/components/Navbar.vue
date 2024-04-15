@@ -35,7 +35,7 @@
 
 <script>
 export default{
-    props: ['text','pages','theme','change','modo','func'],
+    props: ['text','pages','theme','change','modo','func']
 
 }
 </script>
